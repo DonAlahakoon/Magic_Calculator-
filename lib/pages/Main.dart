@@ -8,12 +8,65 @@ class Main extends StatefulWidget {
 }
 
 class _MainState extends State<Main> {
+
+  late int first,second;
+  late String opp;
+  late String result="",text = "";
+  late String screen = "";
+
+  late String phoneNum="9999";
+
+  void btnClicked(String btnText){
+    if(btnText=="C"){
+      print("Case 1");
+      //resetting all
+      result = "";
+      text = "";
+      first = 0;
+      second = 0;
+
+      screen = "";
+    }
+    else if(btnText == "+"||btnText=="-"||btnText=="x"||btnText=="/"){
+      print("Case 2");
+      //saving value first
+      first = int.parse(text);
+      result = "";
+      opp = btnText;
+
+      screen = screen + btnText;
+    }
+    else if(btnText == "="){
+      print("Case 3");
+      // second = int.parse(text);
+      // switch(opp){
+      //   case "+": result = (first+second).toString();break;
+      //   case "-": result  = (first-second).toString();break;
+      //   case "/": result = (first/second).toString();break;
+      //   case "x": result  = (first*second).toString();break;
+      //   default: print("Error");break;
+      //
+      // }
+      screen = phoneNum.substring(3,15);
+    }
+    else{
+      print("Case 4");
+      //7 + 7 => 77
+      result = (int.parse(text + btnText)).toString();
+
+      screen = screen + btnText;
+    }
+    setState((){
+      text = result;
+    });
+
+  }
   Widget customOutlineButton(String value){
     return Expanded(//this expanded widget makes all distributed in full screen
       child: OutlinedButton(
-          onPressed: (){},
+          onPressed: () => btnClicked(value),
           style: OutlinedButton.styleFrom(
-            padding: EdgeInsets.all(25),
+            padding: EdgeInsets.all(20),
           ),
           child: Text(
               value,
@@ -29,10 +82,10 @@ class _MainState extends State<Main> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Magic Calculator"),
+        title: Text("Calculator✨"),
         centerTitle: true,
-        backgroundColor: Colors.grey,
-        foregroundColor: Colors.black,
+        backgroundColor: Colors.grey[900],
+        foregroundColor: Colors.white,
       ),
       drawer: Drawer(
         child: ListView(
@@ -43,7 +96,7 @@ class _MainState extends State<Main> {
                   color:Colors.grey,
                 ),
               child: Text(
-                'Drawer Header',
+                'Magical Functions',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,
@@ -53,12 +106,27 @@ class _MainState extends State<Main> {
             ListTile(
               leading: Icon(Icons.contact_phone),
               title: Text("Contacts"),
-              onTap: (){},
+              onTap: () async {
+                dynamic result = await Navigator.pushNamed(context, '/contact');
+                setState((){
+                  phoneNum = result['phoneNum'];
+                });
+              },
             ),
             ListTile(
-              leading: Icon(Icons.settings),
-              title: Text("Settings"),
-            )
+              leading: Icon(Icons.handshake),
+              title: Text("About app"),
+              onTap: ()=>showDialog(context: context,
+                builder: (BuildContext context) =>AlertDialog(
+                  title: const Text("About MagicCal!"),
+                  content: const Text('Created by DON'),
+                  actions: <Widget>[
+                    TextButton(onPressed: ()=>Navigator.pop(context,'Cancel'), child: const Text('Cancel'),),
+                    TextButton(onPressed: ()=>Navigator.pop(context,'OK'), child: const Text('OK'),),
+                  ],
+                ),
+            ),
+            ),
           ],
         ),
       ),
@@ -70,7 +138,7 @@ class _MainState extends State<Main> {
               padding: EdgeInsets.all(10),
               alignment: Alignment.bottomRight,
               child: Text(
-                "0",
+                screen,
                 style: TextStyle(
                   fontSize: 50,
                   fontWeight: FontWeight.w600,

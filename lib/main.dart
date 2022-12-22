@@ -10,5 +10,6 @@ void main() {
       '/':(context) => Main(),
       '/contact':(context) => Contacts(),
     },
+
   ));
 }
