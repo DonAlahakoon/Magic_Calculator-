@@ -47,7 +47,7 @@ class _MainState extends State<Main> {
       //   default: print("Error");break;
       //
       // }
-      screen = phoneNum.substring(3,15);
+      screen = assignPhoneNum(phoneNum);
     }
     else{
       print("Case 4");
@@ -61,6 +61,30 @@ class _MainState extends State<Main> {
     });
 
   }
+
+  String assignPhoneNum(String num){
+    if(num.contains(" ")){//numbers with +94 and middle spaces
+    num=num.replaceAll(" ", "");
+    return num.substring(3);
+    }
+    else if(num.contains("+")) {//numbers starting with +94
+      return num.substring(3);
+    }
+    else if(num.contains("-")){//numbers with middle "-"s
+      num=num.replaceAll("-", "");
+      return num.substring(1);
+    }
+    else if(num.contains(" ")){//numbers with middle spaces
+      num=num.replaceAll(" ", "");
+      return num.substring(1);
+    }
+    else if(num.length==10){//numbers starting with zeros
+      return num.substring(1);
+    }
+    else
+      return num;
+  }
+
   Widget customOutlineButton(String value){
     return Expanded(//this expanded widget makes all distributed in full screen
       child: OutlinedButton(
